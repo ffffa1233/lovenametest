@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>애정도 테스트</title>
+<script type="text/javascript">
+	var name1 = "";
+	var name2 = "";
+	var name = "";
+	var str = "";
+
+	function init() {
+		enter();				
+		return false;
+	}
+	
+	function enter() {				
+		name1 = document.f.name1.value;
+		name2 = document.f.name2.value;
+		
+		sum(name1, name2);
+	}
+	
+	function sum(name1, name2){
+		var name = new Array();
+		var man = new Array();
+		var woman = new Array();
+		var cnt = new Array();
+		var cnt1 = new Array();
+		var cnt2 = new Array();
+		var cnt3 = new Array();
+		var cnt4 = new Array();
+		
+		var i;
+		var result;
+		
+		man = name1;
+		woman = name2;
+				
+		for(i=0;i<man.length*2;i++){ //이름을 한글자씩 재배열
+			if(i%2==0)
+				name[i]=man[i/2];
+			else
+				name[i]=woman[Math.floor(i/2)];
+		}		
+	
+		for(i=0;i<name.length;i++){ //배열된 문자의 횟수를 cnt배열에 입력
+			cnt[i]=count(divide(name[i]));
+		}
+		 alert(cnt);
+		
+		 for(var j=1;cnt.length!=2;j++){ //cnt배열에 있는 숫자 합한다.
+			for(i=0;i<name.length-j;i++){
+				cnt[i]=(cnt[i]+cnt[i+1])%10;
+				if(i+1==(name.length-j)){
+					cnt.pop();
+				}
+			}
+			alert(cnt);
+		}
+		result = cnt[0]*10+cnt[1];
+		alert(name1+"님의 "+name2+"님에 대한 애정도는 "+result+"% 입니다.");
+		document.f.result.value = result;
+		}
+	
+	function divide(name) { //name에 있는 글자를 초성, 중성, 종성 모두 분리
+		var a = name;
+		var str="";
+		
+		var hanTable = new Array();
+		hanTable[0] = 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ'; // 19 초성
+		hanTable[1] = 'ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ'; //21 중성
+		hanTable[2] = ' ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ'; //28 종성
+
+		for (var i = 0; i < a.length; i++) {
+
+			var b = a.charCodeAt(i);
+			var hcode = b - 0xAC00;
+
+			var cho = new Array();
+			cho[0] = parseInt(hcode / 588); //초성
+			var hcode2 = hcode % 588;
+
+			cho[1] = parseInt(hcode2 / 28); //중성
+			cho[2] = hcode2 % 28; //종성 ㄱ,,,ㄴ
+
+			var mun = new Array();
+			mun[0] = hanTable[0].charAt(cho[0]);
+			mun[1] = hanTable[1].charAt(cho[1]); //자음
+			mun[2] = hanTable[2].charAt(cho[2]); //0번은 종성유무
+
+			if (cho[2] == 9) {
+
+				mun[2] = "ㄹ";
+				mun[3] = "ㄱ";
+
+			}
+
+			str += mun + "\n";
+
+		}
+		
+		return str;
+	}
+	
+	function count(str){ //str에 있는 한글들을 횟수에 맞춰 숫자로 변환
+		var count = new Array();
+		var num = new Array();
+		var n=0;
+		count = str;
+		for(var i=0;i<count.length; i++){
+			if(count[i]!=","){
+				if((count[i]=="ㅇ")||(count[i]=="ㅡ")||(count[i]=="ㅣ"))
+					num[i]=1;
+				else if((count[i]=="ㄱ")||(count[i]=="ㄴ")||(count[i]=="ㅅ")||
+						(count[i]=="ㅏ")||(count[i]=="ㅓ")||(count[i]=="ㅗ")||
+						(count[i]=="ㅜ")||(count[i]=="ㅢ"))
+					num[i]=2;
+				else if((count[i]=="ㄷ")||(count[i]=="ㅈ")||(count[i]=="ㅋ")||
+						(count[i]=="ㅎ")||(count[i]=="ㅐ")||(count[i]=="ㅑ")||
+						(count[i]=="ㅔ")||(count[i]=="ㅕ")||(count[i]=="ㅚ")||
+						(count[i]=="ㅛ")||(count[i]=="ㅟ")||(count[i]=="ㅠ"))
+					num[i]=3;
+				else if((count[i]=="ㄲ")||(count[i]=="ㅁ")||(count[i]=="ㅂ")||
+						(count[i]=="ㅆ")||(count[i]=="ㅊ")||(count[i]=="ㅌ")||
+						(count[i]=="ㅍ")||(count[i]=="ㅒ")||(count[i]=="ㅖ")||
+						(count[i]=="ㅘ")||(count[i]=="ㅝ"))
+					num[i]=4;
+				else if((count[i]=="ㄹ")||(count[i]=="ㅙ")||(count[i]=="ㅞ"))
+					num[i]=5;
+				else if((count[i]=="ㄸ")||(count[i]=="ㅉ"))
+					num[i]=6;
+				else if((count[i]=="ㅃ"))
+					num[i]=8;
+			}
+		}
+		for(i=0;i<num.length;i++){ //num배열에 숫자가 있으면 그 숫자들 차례로 더한다.
+			if((num[i]==0)||(num[i]==1)||(num[i]==2)||
+			   (num[i]==3)||(num[i]==4)||(num[i]==5)||
+			   (num[i]==6)||(num[i]==7)||(num[i]==8)||
+			   (num[i]==9))
+				n+=num[i];
+		}
+		return n;
+	}
+	function check(val) {  //한글, 숫자, 특수문자만 입력하도록, 영어 입력시 알림창 뜬다. 
+	    var flag = val.keyCode;
+	    if ( (64 < flag && flag < 91) || (96 < flag && flag < 123) ) {
+	        alert("한글만 입력 가능합니다.");
+	        return false;
+	    }
+	}
+	
+</script>
+</head>
+<body>
+	<form name="f" id="f" onsubmit="return init();">
+		<font size="5" color="red">
+		"주의사항 : 한글 이름만 가능합니다, 이름은 석자만 적어야 합니다,<br>
+		 초성만 입력하면 안됩니다, 남녀 이름 모두 적어야 합니다."
+		</font>
+		<br><br><br><br>
+		<font size="5" color = "blue">
+		"알림창을 잘 봐주세요."
+		</font>
+		<br> <br>
+		이름1 : <input type="text" name="name1" size="8" onkeypress="return check(event);"/><br> 
+		이름2 : <input type="text" name="name2" size="8" onkeypress="return check(event);"/><br> <br> 
+		<input type="submit" value="애정도 결과 보기" /><br> <br>
+		결과값 : <input type="text" name="result" value="" size="9" /><br>
+		<br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br> <br>
+		<font size="1" color = "black">
+		만든이 psc
+		</font>
+	</form>
+</body>
+</html>
